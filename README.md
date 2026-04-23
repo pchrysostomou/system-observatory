@@ -281,10 +281,4 @@ Features: CPU, memory, network, disk stats with block sparklines (▁▂▃▄�
 
 ---
 
-## 📄 License
-
-MIT License — free to use, modify, and distribute.
-
----
-
 **System Observatory — Continuously Observing Your System** 🔭
