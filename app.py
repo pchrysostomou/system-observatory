@@ -50,9 +50,11 @@ class MetricsCollector:
 
         self.timestamp = datetime.now()
         self.boot_time = datetime.fromtimestamp(psutil.boot_time())
+        self.tick = 0
 
     def collect(self):
         """Collect current system metrics."""
+        self.tick += 1
         now = datetime.now()
         dt = (now - self.timestamp).total_seconds() or 1
         self.timestamp = now
@@ -163,6 +165,24 @@ class MetricsCollector:
             'health_score': max(0, health),
         }
 
+    def warm_up_from_db(self, db_instance):
+        """Seed history deques from stored DB records so charts are full on startup."""
+        try:
+            rows = db_instance.get_metrics(hours=2)
+        except Exception:
+            return
+        if not rows:
+            return
+        for row in rows[-HISTORY_SIZE:]:
+            self.cpu_history.append(row.get('cpu_percent') or 0)
+            self.memory_history.append(row.get('memory_percent') or 0)
+            self.swap_history.append(row.get('swap_percent') or 0)
+            mb = 1024 * 1024
+            self.network_up_history.append((row.get('network_up_mbps') or 0) * mb)
+            self.network_down_history.append((row.get('network_down_mbps') or 0) * mb)
+            self.disk_read_history.append((row.get('disk_read_mbps') or 0) * mb)
+            self.disk_write_history.append((row.get('disk_write_mbps') or 0) * mb)
+
     @property
     def disk_history_pct(self):
         """Disk usage percentage over time (computed from space)."""
@@ -171,6 +191,7 @@ class MetricsCollector:
 # ─── Global collector ──────────────────────────────────────────────────────────
 
 collector = MetricsCollector()
+collector.warm_up_from_db(db)
 
 def background_collector():
     """Continuously collect metrics."""
@@ -224,7 +245,7 @@ def api_processes():
         except (psutil.NoSuchProcess, psutil.AccessDenied):
             pass
 
-    procs.sort(key=lambda x: x.get('cpu_percent', 0), reverse=True)
+    procs.sort(key=lambda x: x.get('cpu_percent') or 0, reverse=True)
     return jsonify(procs[:15])
 
 @app.route('/api/network-interfaces')

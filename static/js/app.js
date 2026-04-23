@@ -469,10 +469,17 @@ function initCharts() {
 
 // ─── Update charts ────────────────────────────────────────────────────────────
 
+function padHistory(arr, size = 120) {
+    const sliced = arr.slice(-size);
+    if (sliced.length >= size) return sliced;
+    const fill = sliced.length > 0 ? sliced[0] : 0;
+    return Array(size - sliced.length).fill(fill).concat(sliced);
+}
+
 function updateCharts(data) {
     // CPU
     if (charts.cpuChart && data.cpu.history) {
-        charts.cpuChart.data.datasets[0].data = data.cpu.history.slice(-120);
+        charts.cpuChart.data.datasets[0].data = padHistory(data.cpu.history);
         charts.cpuChart.update('none');
     }
 
@@ -500,27 +507,27 @@ function updateCharts(data) {
 
     // Network
     if (charts.networkUpChart && data.network.up_history) {
-        const upMbps = data.network.up_history.map(b => b / (1024 * 1024)).slice(-120);
-        charts.networkUpChart.data.datasets[0].data = upMbps;
+        const upMbps = data.network.up_history.map(b => b / (1024 * 1024));
+        charts.networkUpChart.data.datasets[0].data = padHistory(upMbps);
         charts.networkUpChart.update('none');
     }
 
     if (charts.networkDownChart && data.network.down_history) {
-        const downMbps = data.network.down_history.map(b => b / (1024 * 1024)).slice(-120);
-        charts.networkDownChart.data.datasets[0].data = downMbps;
+        const downMbps = data.network.down_history.map(b => b / (1024 * 1024));
+        charts.networkDownChart.data.datasets[0].data = padHistory(downMbps);
         charts.networkDownChart.update('none');
     }
 
     // Disk
     if (charts.diskReadChart && data.disk.read_history) {
-        const readMBps = data.disk.read_history.map(b => b / (1024 * 1024)).slice(-120);
-        charts.diskReadChart.data.datasets[0].data = readMBps;
+        const readMBps = data.disk.read_history.map(b => b / (1024 * 1024));
+        charts.diskReadChart.data.datasets[0].data = padHistory(readMBps);
         charts.diskReadChart.update('none');
     }
 
     if (charts.diskWriteChart && data.disk.write_history) {
-        const writeMBps = data.disk.write_history.map(b => b / (1024 * 1024)).slice(-120);
-        charts.diskWriteChart.data.datasets[0].data = writeMBps;
+        const writeMBps = data.disk.write_history.map(b => b / (1024 * 1024));
+        charts.diskWriteChart.data.datasets[0].data = padHistory(writeMBps);
         charts.diskWriteChart.update('none');
     }
 }
