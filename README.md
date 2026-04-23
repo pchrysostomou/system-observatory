@@ -272,13 +272,4 @@ python3 sysmon.py
 Features: CPU, memory, network, disk stats with block sparklines (▁▂▃▄▅▆▇█), per-core visualization, and color-coded gauges.
 
 ---
-
-## 👥 Contributors
-
-| Name | Role |
-|------|------|
-| [Prodromos Chrysostomou](https://github.com/pchrysostomou) | Creator & Maintainer |
-
----
-
 **System Observatory — Continuously Observing Your System** 🔭
