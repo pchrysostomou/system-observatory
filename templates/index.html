@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Claude Power Dashboard</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns@3.0.0/dist/chartjs-adapter-date-fns.bundle.min.js"></script>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <div class="stars"></div>
+
+    <header class="dashboard-header">
+        <div class="header-content">
+            <h1 class="title">
+                <span class="logo">⚡</span> Claude Power Dashboard
+            </h1>
+            <div class="header-info">
+                <span class="clock" id="clock">--:--:--</span>
+                <button class="header-btn" id="themeToggle" title="Toggle theme">🌙</button>
+                <button class="header-btn" id="settingsBtn" title="Settings">⚙️</button>
+                <button class="header-btn" id="helpBtn" title="Help (?)">❓</button>
+                <span class="health-badge" id="healthBadge">●</span>
+            </div>
+        </div>
+    </header>
+
+    <main class="dashboard">
+        <!-- System Overview Cards -->
+        <section class="overview-section">
+            <div class="card card-health">
+                <div class="card-header">
+                    <h3>System Health</h3>
+                </div>
+                <div class="health-score-container">
+                    <div class="health-dial" id="healthDial">
+                        <svg viewBox="0 0 200 200">
+                            <circle cx="100" cy="100" r="90" class="dial-bg"></circle>
+                            <circle cx="100" cy="100" r="90" class="dial-progress" id="dialProgress"></circle>
+                        </svg>
+                        <div class="health-text">
+                            <span class="health-number" id="healthScore">--</span>
+                            <span class="health-label" id="healthLabel">--</span>
+                        </div>
+                    </div>
+                </div>
+                <ul class="health-issues" id="healthIssues"></ul>
+            </div>
+
+            <div class="card card-compact">
+                <div class="card-header">
+                    <h3>🖥️ System</h3>
+                </div>
+                <div class="compact-grid">
+                    <div class="stat-item">
+                        <span class="stat-label">Hostname</span>
+                        <span class="stat-value" id="hostname">--</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-label">OS</span>
+                        <span class="stat-value" id="os">--</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-label">Uptime</span>
+                        <span class="stat-value" id="uptime">--</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-label">Processes</span>
+                        <span class="stat-value" id="processes">--</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Charts Section -->
+        <section class="charts-section">
+            <div class="card card-full">
+                <div class="card-header">
+                    <h3>📊 CPU Usage</h3>
+                    <span class="metric-current" id="cpuCurrent">--</span>
+                </div>
+                <canvas id="cpuChart"></canvas>
+            </div>
+
+            <div class="card card-full">
+                <div class="card-header">
+                    <h3>💾 Memory & Swap</h3>
+                </div>
+                <div class="memory-charts">
+                    <div class="mini-chart-container">
+                        <canvas id="memoryChart"></canvas>
+                    </div>
+                    <div class="mini-chart-container">
+                        <canvas id="swapChart"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card card-full">
+                <div class="card-header">
+                    <h3>🌐 Network</h3>
+                </div>
+                <div class="network-charts">
+                    <div class="mini-chart-container">
+                        <canvas id="networkUpChart"></canvas>
+                    </div>
+                    <div class="mini-chart-container">
+                        <canvas id="networkDownChart"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card card-full">
+                <div class="card-header">
+                    <h3>💿 Disk I/O</h3>
+                </div>
+                <div class="io-charts">
+                    <div class="mini-chart-container">
+                        <canvas id="diskReadChart"></canvas>
+                    </div>
+                    <div class="mini-chart-container">
+                        <canvas id="diskWriteChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Metrics Grid -->
+        <section class="metrics-grid">
+            <div class="card">
+                <div class="card-header">
+                    <h3>🔥 CPU Details</h3>
+                </div>
+                <div class="metrics-container">
+                    <div class="metric">
+                        <span class="metric-name">Total</span>
+                        <div class="progress-bar">
+                            <div class="progress-fill" id="cpuBar"></div>
+                        </div>
+                        <span class="metric-value" id="cpuValue">--</span>
+                    </div>
+                    <div class="metric">
+                        <span class="metric-name">Frequency</span>
+                        <span class="metric-value" id="cpuFreq">--</span>
+                    </div>
+                    <div class="metric">
+                        <span class="metric-name">Cores</span>
+                        <span class="metric-value" id="cpuCores">--</span>
+                    </div>
+                </div>
+                <div class="per-core-grid" id="perCoreGrid"></div>
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <h3>🧠 Memory Details</h3>
+                </div>
+                <div class="metrics-container">
+                    <div class="metric">
+                        <span class="metric-name">Used</span>
+                        <div class="progress-bar">
+                            <div class="progress-fill" id="memBar"></div>
+                        </div>
+                        <span class="metric-value" id="memValue">--</span>
+                    </div>
+                    <div class="metric">
+                        <span class="metric-name">Total</span>
+                        <span class="metric-value" id="memTotal">--</span>
+                    </div>
+                    <div class="metric">
+                        <span class="metric-name">Available</span>
+                        <span class="metric-value" id="memAvail">--</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <h3>🌐 Network Details</h3>
+                </div>
+                <div class="metrics-container">
+                    <div class="metric">
+                        <span class="metric-name">Upload</span>
+                        <span class="metric-value" id="netUp">-- Mbps</span>
+                    </div>
+                    <div class="metric">
+                        <span class="metric-name">Download</span>
+                        <span class="metric-value" id="netDown">-- Mbps</span>
+                    </div>
+                    <div class="metric">
+                        <span class="metric-name">Total ↑</span>
+                        <span class="metric-value" id="netUpTotal">--</span>
+                    </div>
+                    <div class="metric">
+                        <span class="metric-name">Total ↓</span>
+                        <span class="metric-value" id="netDownTotal">--</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <h3>💿 Disk Details</h3>
+                </div>
+                <div class="metrics-container">
+                    <div class="metric">
+                        <span class="metric-name">Used</span>
+                        <div class="progress-bar">
+                            <div class="progress-fill" id="diskBar"></div>
+                        </div>
+                        <span class="metric-value" id="diskValue">--</span>
+                    </div>
+                    <div class="metric">
+                        <span class="metric-name">Total</span>
+                        <span class="metric-value" id="diskTotal">--</span>
+                    </div>
+                    <div class="metric">
+                        <span class="metric-name">Read</span>
+                        <span class="metric-value" id="diskRead">--</span>
+                    </div>
+                    <div class="metric">
+                        <span class="metric-name">Write</span>
+                        <span class="metric-value" id="diskWrite">--</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Processes & Interfaces -->
+        <section class="detail-section">
+            <div class="card card-wide">
+                <div class="card-header">
+                    <h3>⚙️ Top Processes</h3>
+                </div>
+                <table class="process-table">
+                    <thead>
+                        <tr>
+                            <th>PID</th>
+                            <th>Name</th>
+                            <th>CPU %</th>
+                            <th>Memory %</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody id="processTable"></tbody>
+                </table>
+            </div>
+
+            <div class="card card-wide">
+                <div class="card-header">
+                    <h3>🔗 Network Interfaces</h3>
+                </div>
+                <table class="interface-table">
+                    <thead>
+                        <tr>
+                            <th>Interface</th>
+                            <th>IP Address</th>
+                            <th>Speed</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody id="interfaceTable"></tbody>
+                </table>
+            </div>
+
+            <div class="card card-wide">
+                <div class="card-header">
+                    <h3>📁 Disk Partitions</h3>
+                </div>
+                <table class="disk-table">
+                    <thead>
+                        <tr>
+                            <th>Mount Point</th>
+                            <th>FS Type</th>
+                            <th>Total</th>
+                            <th>Used</th>
+                            <th>Free</th>
+                            <th>Usage</th>
+                        </tr>
+                    </thead>
+                    <tbody id="diskTable"></tbody>
+                </table>
+            </div>
+        </section>
+    </main>
+
+    <!-- Settings Modal -->
+    <div id="settingsModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Settings</h2>
+                <button class="modal-close" id="settingsClose">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="setting-group">
+                    <label>
+                        <input type="checkbox" id="cpuAlert" />
+                        <span>Alert when CPU > <input type="number" id="cpuThreshold" min="0" max="100" value="80" style="width: 50px;">%</span>
+                    </label>
+                </div>
+                <div class="setting-group">
+                    <label>
+                        <input type="checkbox" id="memAlert" />
+                        <span>Alert when Memory > <input type="number" id="memThreshold" min="0" max="100" value="85" style="width: 50px;">%</span>
+                    </label>
+                </div>
+                <div class="setting-group">
+                    <label>
+                        <input type="checkbox" id="diskAlert" />
+                        <span>Alert when Disk > <input type="number" id="diskThreshold" min="0" max="100" value="90" style="width: 50px;">%</span>
+                    </label>
+                </div>
+                <div class="setting-group">
+                    <label>
+                        <input type="checkbox" id="soundEnabled" checked />
+                        <span>Enable sound notifications</span>
+                    </label>
+                </div>
+                <div class="setting-group">
+                    <button id="exportBtn" class="btn btn-primary">📥 Export Metrics (CSV)</button>
+                    <button id="benchmarkBtn" class="btn btn-primary">⚡ Run Benchmark</button>
+                </div>
+                <div id="benchmarkResults"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Help Modal -->
+    <div id="helpModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Keyboard Shortcuts & Help</h2>
+                <button class="modal-close" id="helpClose">&times;</button>
+            </div>
+            <div class="modal-body">
+                <table class="shortcuts-table">
+                    <tr><td><kbd>?</kbd></td><td>Show this help</td></tr>
+                    <tr><td><kbd>T</kbd></td><td>Toggle theme</td></tr>
+                    <tr><td><kbd>S</kbd></td><td>Open settings</td></tr>
+                    <tr><td><kbd>E</kbd></td><td>Export metrics</td></tr>
+                    <tr><td><kbd>B</kbd></td><td>Run benchmark</td></tr>
+                    <tr><td><kbd>R</kbd></td><td>Refresh data</td></tr>
+                </table>
+                <h3>Features</h3>
+                <ul>
+                    <li>📊 Real-time monitoring with Server-Sent Events</li>
+                    <li>💾 Historical data storage (24h, 7d, 30d)</li>
+                    <li>⚠️ Custom alerts with browser notifications</li>
+                    <li>⚙️ Process management (kill processes)</li>
+                    <li>📥 Export to CSV</li>
+                    <li>⚡ System benchmarking</li>
+                    <li>🌙 Dark/Light theme toggle</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <script src="{{ url_for('static', filename='js/app.js') }}"></script>
+</body>
+</html>

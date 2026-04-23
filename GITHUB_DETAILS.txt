@@ -1,0 +1,152 @@
+📋 GITHUB REPOSITORY DETAILS
+═══════════════════════════════════════════════════════════════════════════════
+
+REPOSITORY NAME:
+  claude-power-dashboard
+
+REPOSITORY URL (when created):
+  https://github.com/[YOUR_USERNAME]/claude-power-dashboard
+
+DESCRIPTION (Short - 120 characters max):
+  Real-time system monitoring dashboard with SQLite storage, custom alerts,
+  process management, and beautiful glassmorphic UI.
+
+LONG DESCRIPTION (for GitHub):
+
+  # Claude Power Dashboard
+
+  The most beautiful system monitor you'll ever see. A full-stack web dashboard
+  for real-time system monitoring with interactive charts, historical data
+  analysis, custom alerts, process management, and smooth animations.
+
+  ## Key Features
+
+  ⚡ **Real-Time Monitoring** — Live CPU, Memory, Network, Disk stats via SSE
+  💾 **Historical Data** — SQLite storage with 24h, 7d, 30d views
+  ⚠️ **Smart Alerts** — Custom thresholds with notifications & sound
+  ⚙️ **Process Management** — Kill processes, view details
+  📊 **Beautiful Charts** — Chart.js with real-time updates
+  🎨 **Dark/Light Themes** — Glassmorphic design with animations
+  ⌨️ **Keyboard Shortcuts** — Quick access to all features
+  📥 **Export Metrics** — Download to CSV for analysis
+  ⚡ **Benchmarking** — System performance testing tools
+
+  ## Tech Stack
+
+  - **Backend**: Flask 3.0, psutil, SQLite
+  - **Frontend**: HTML5, CSS3, Chart.js, Vanilla JS
+  - **Real-time**: Server-Sent Events (SSE)
+  - **Design**: Glassmorphism, cyberpunk aesthetic
+
+  ## Quick Start
+
+  ```bash
+  pip install -r requirements.txt
+  python3 app.py
+  ```
+
+  Open http://localhost:8080 in your browser.
+
+  ## Features
+
+  - 📊 6 real-time charts (CPU, Memory, Swap, Network Up/Down, Disk I/O)
+  - 🎯 Animated health score dial (0-100)
+  - ⚠️ Custom alerts with browser notifications & sound
+  - ⚙️ Process management (kill, view details)
+  - 📁 Network & disk partition monitoring
+  - 💾 Historical data with SQLite (auto-cleanup)
+  - 📥 Export metrics to CSV
+  - ⚡ System benchmarking suite
+  - 🌙 Dark/Light theme toggle
+  - ⌨️ Keyboard shortcuts (?, T, S, E, B, R)
+  - 📱 Responsive mobile/tablet layout
+  - 🔔 Browser notifications & sound alerts
+
+  ## API Endpoints
+
+  - `/api/snapshot` — Current metrics
+  - `/api/stream` — Real-time SSE stream
+  - `/api/historical?hours=24` — Historical data
+  - `/api/export?hours=24` — CSV download
+  - `/api/processes` — Top processes
+  - `/api/benchmark` — Run benchmarks
+  - `/api/process/kill` — Kill process
+  - More endpoints for network, disk, health
+
+  ## Keyboard Shortcuts
+
+  - `?` — Help
+  - `T` — Toggle theme
+  - `S` — Settings
+  - `E` — Export
+  - `B` — Benchmark
+  - `R` — Refresh
+
+TOPICS (Tags):
+  - system-monitoring
+  - dashboard
+  - real-time
+  - flask
+  - sqlite
+  - charts
+  - web-dashboard
+  - system-stats
+  - cpu-monitor
+  - memory-monitor
+  - network-monitor
+  - cyberpunk
+  - glassmorphism
+
+HOMEPAGE URL (optional):
+  http://localhost:8080
+
+VISIBILITY:
+  Public
+
+INITIALIZE WITH:
+  ✓ Add a README file
+  ✓ Add .gitignore (Python)
+  ✓ Add a license (MIT)
+
+═══════════════════════════════════════════════════════════════════════════════
+
+WHAT'S INCLUDED:
+
+✅ Full-stack web application
+✅ 8 real-time charts with historical data
+✅ SQLite database with auto-cleanup
+✅ Custom alerts system (CPU, Memory, Disk)
+✅ Process management (view, kill)
+✅ Export to CSV functionality
+✅ System benchmarking tools
+✅ Dark/Light theme toggle
+✅ Keyboard shortcuts
+✅ Responsive mobile design
+✅ Browser notifications
+✅ Beautiful glassmorphic UI
+✅ Complete documentation
+✅ Production-ready code
+✅ Bonus terminal monitor (sysmon.py)
+
+TOTAL LINES OF CODE:
+  - app.py: 400+ lines
+  - database.py: 80+ lines
+  - templates/index.html: 400+ lines
+  - static/css/style.css: 800+ lines
+  - static/js/app.js: 900+ lines
+  - sysmon.py: 600+ lines
+  - Total: ~3,200 lines
+
+PROJECT SIZE: 160KB
+
+═══════════════════════════════════════════════════════════════════════════════
+
+READY TO PUSH TO GITHUB!
+
+Just provide the repository link after creating it, and I can help you:
+  - Initialize git
+  - Commit all files
+  - Push to your repo
+  - Add any additional badges/documentation
+
+═══════════════════════════════════════════════════════════════════════════════
